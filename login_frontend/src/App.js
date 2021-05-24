@@ -1,25 +1,25 @@
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import PostListPage from './pages/PostListPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import WritePage from './pages/WritePage';
+import PostPage from './pages/PostPage';
+import { Route } from 'react-router';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Route component={PostListPage} path={['/@:username', '/']} exact />
+    {/* 배열을 넣어서 한 라우트 컴포넌트에 여러 개 경로를 쉽게 설정가능함 */}
+    {/* @:username - 사용자의 아이디를 username파라미터로 읽을 수 있게 한다 */}
+    <Route component={LoginPage} path="/login" />
+    <Route component={RegisterPage} path="/register" />
+    <Route component={WritePage} path="/write" />
+    <Route component={PostPage} path="/@:username/:postId" />
+    </>
   );
-}
+};
 
 export default App;

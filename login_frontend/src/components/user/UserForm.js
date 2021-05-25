@@ -55,25 +55,51 @@ const Footer = styled.div`
 const ButtonWidthMarginTop = styled(Button)`
     margin-top: 1rem;
 `;
-const UserForm = () =>{
+const textMap = {
+    login: '로그인',
+    register: '회원가입',
+};
+
+const UserForm = ({type, form, onChange, onSubmit}) =>{
+    const text = textMap[type];
     return (
         <UserFormBlock>
-            <h3>로그인</h3>
-            <form>
-                <SytledInput autoComplete="username" name="username" placeholder="아이디"/>
+            <h3>{text}</h3>
+            <form onSubmit={onSubmit}>
+                <SytledInput 
+                    autoComplete="username" 
+                    name="username" 
+                    placeholder="아이디"
+                    onChange={onChange}
+                    value={form.username}
+                />
                 <SytledInput
                     autoComplete="new_password" 
                     name="password" 
                     placeholder="비밀번호"
                     type="password"
+                    onChange={onChange}
+                    value={form.password}
                 />
+                {type === 'register' && (
+                    <SytledInput
+                    autoComplete="new-password"
+                    name="passwordConfirm"
+                    placeholder="비밀번호 확인"
+                    type="password"
+                    />
+                )}
                 <ButtonWidthMarginTop cyan fullWidth>
-                    로그인
+                    {text}
                 </ButtonWidthMarginTop>
                 {/* <Button cyan={true} fullwidth={true}/>와 같은 의미 */}
             </form>
             <Footer>
-                <Link to="/register">회원가입</Link>
+                {type === 'login' ? (
+                    <Link to="/register">회원가입</Link>
+                ) : (
+                    <Link to="/login">로그인</Link>
+                )}
             </Footer>
         </UserFormBlock>
     );

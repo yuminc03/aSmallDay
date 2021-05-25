@@ -1,7 +1,13 @@
 import React from 'react';
+import UserTemplate from '../components/user/UserTemplate';
+import UserForm from '../components/user/UserForm';
 
 const RegisterPage = () => {
-    return <div>회원가입</div>;
+    return (
+        <UserTemplate>
+            <UserForm/>
+        </UserTemplate>
+    );
 };
 
 export default RegisterPage;

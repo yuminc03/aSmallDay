@@ -5,7 +5,9 @@ import bodyParser from 'koa-bodyparser';
 import mongoose from 'mongoose';
 
 import api from './api';
+import createFakeData from './createFakeData';
 import jwtMiddleware from './lib/jwtMiddleware';
+import { create } from 'eslint/lib/rules/*';
 // lib/jwtMiddleare 미들웨어를 적용한다 
 
 //비구조화 할당을 통해 process.env 내부 값에 대한 레퍼런스 만들기
@@ -14,6 +16,7 @@ const {PORT, MONGO_URI} = process.env;
 mongoose.connect(MONGO_URI, {useUnifiedTopology: true, useFindAndModify: false})
     .then(() => {
         console.log('Connected to MongoDB');
+        //createFakeData();
     })
     .catch(e => {
         console.error(e);

@@ -83,7 +83,7 @@ export const list = async ctx => {
         const posts = await Post.find()
         .sort({_id: -1})//포스트를 역순으로 불러오기 - 1: 오름차순, -1: 내림차순
         .limit(10)//포스트가 한 번에 보이는 개수는 10개로 한다
-        .skip((page - 1) ( 10))
+        .skip((page - 1) * 10)
         .lean()//데이터를 처음부터 json형태로 조회할 수 있다
         .exec();//find함수를 호출하고 exec()를 붙여야 서버에 쿼리를 요청한다
     const postCount = await Post.countDocuments().exec();//마지막 페이지 번호 알려주기

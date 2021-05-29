@@ -8,7 +8,7 @@ import {Link} from 'react-router-dom';
  */
 
 /*화면 전체를 채움*/
-const UserTemplateBlock = styled.div`
+const AuthTemplateBlock = styled.div`
     position: absolute;
     left: 0;
     top: 0;
@@ -39,17 +39,17 @@ const WhiteBox = styled.div`
     border-radius: 2px;
 `;
 
-const UserTemplate = ({children}) => {
+const AuthTemplate = ({children}) => {
     return (
-        <UserTemplateBlock>
+        <AuthTemplateBlock>
             <WhiteBox>
                 <div className="logo-area">
                     <Link to="/">A SMALL DAY</Link>
                 </div>
                 {children}
             </WhiteBox>
-        </UserTemplateBlock>
+        </AuthTemplateBlock>
     );
 };
 
-export default UserTemplate;
+export default AuthTemplate;

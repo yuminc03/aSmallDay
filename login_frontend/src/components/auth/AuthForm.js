@@ -8,7 +8,7 @@ import Button from '../common/Button';
  * 회원가입 또는 로그인 폼을 보여 줍니다.
  */
 
-const UserFormBlock = styled.div`
+const AuthFormBlock = styled.div`
     h3{
         margin: 0;
         color: ${palette.gray[8]};
@@ -60,10 +60,22 @@ const textMap = {
     register: '회원가입',
 };
 
-const UserForm = ({type, form, onChange, onSubmit}) =>{
+/**
+ *에러를 보여 줍니다. 
+ *
+*/
+const ErrorMessage = styled.div`
+    color: red;
+    text-align: center;
+    font-align: 0.875rem;
+    margin-top: 1rem;
+`;
+
+
+const AuthForm = ({type, form, onChange, onSubmit, error}) =>{
     const text = textMap[type];
     return (
-        <UserFormBlock>
+        <AuthFormBlock>
             <h3>{text}</h3>
             <form onSubmit={onSubmit}>
                 <SytledInput 
@@ -87,9 +99,12 @@ const UserForm = ({type, form, onChange, onSubmit}) =>{
                     name="passwordConfirm"
                     placeholder="비밀번호 확인"
                     type="password"
+                    onChange={onChange}
+                    value={form.passwordConfirm}
                     />
                 )}
-                <ButtonWidthMarginTop cyan fullWidth>
+                {error && <ErrorMessage>{error}</ErrorMessage>}
+                <ButtonWidthMarginTop cyan fullWidth style={{marginTop: '1rem'}}>
                     {text}
                 </ButtonWidthMarginTop>
                 {/* <Button cyan={true} fullwidth={true}/>와 같은 의미 */}
@@ -101,8 +116,8 @@ const UserForm = ({type, form, onChange, onSubmit}) =>{
                     <Link to="/login">로그인</Link>
                 )}
             </Footer>
-        </UserFormBlock>
+        </AuthFormBlock>
     );
 };
 
-export default UserForm;
+export default AuthForm;

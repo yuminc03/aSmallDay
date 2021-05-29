@@ -55,6 +55,7 @@ export const write = async ctx => {
         title,
         body,
         tags,
+        user: ctx.state.user,//일기를 쓸 때 사용자 정보를 넣어 DB에 저장
     });
     try{
         await post.save();//이때 데이터베이스에 저장됨

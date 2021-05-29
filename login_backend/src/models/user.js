@@ -16,9 +16,9 @@ UserSchema.methods.setPassword = async function(password){
 //setPassword = 비밀번호를 파라미터로 받아서 계정의 
 //hashedPAssword값을 설정해 줌
 
-UserSchema.methods.checkPassword = async function(password){
-    const result = await bcrypt.compare(password, this.hashedPassword);
-    return result;//true / false
+UserSchema.methods.checkPassword = async function(password) {
+  const result = await bcrypt.compare(password, this.hashedPassword);
+  return result; // true / false
 };
 //checkPassword = 파라미터로 받은 비밀번호가 해당 계정의 비번과 
 //일치하는지 검증
@@ -27,9 +27,6 @@ UserSchema.methods.checkPassword = async function(password){
 //this는 문서 인스턴스를 가리킨다
 //화살표 함수를 사용하면 this가 문서 인스턴스를 가리키지 못함
 
-UserSchema.statics.findByUsername = function(username){
-    return this.findOne({username});
-};
 //findByUsername =  static 메서드, username으로 데이터를 찾을 수 있게 한다
 //static 함수에서 this는 model을 가리킴
 
@@ -37,9 +34,7 @@ UserSchema.methods.serialize = function(){
     const data = this.toJSON();
     delete data.hashedPassword;
     return data;
-}
-const User = mongoose.model('User', UserSchema);
-export default User;
+};
 
 UserSchema.methods.generateToken = function() {
     const token = jwt.sign(
@@ -55,3 +50,10 @@ UserSchema.methods.generateToken = function() {
     );
     return token;
 };
+
+UserSchema.statics.findByUsername = function(username){
+    return this.findOne({username});
+};
+
+const User = mongoose.model('User', UserSchema);
+export default User;

@@ -7,7 +7,7 @@ const jwtMiddleware = async (ctx, next) =>{
     if(!token) return next(); //토큰이 없음
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        ctx.state.user = {//
+        ctx.state.user = {
             _id: decoded._id,
             username: decoded.username,
         };

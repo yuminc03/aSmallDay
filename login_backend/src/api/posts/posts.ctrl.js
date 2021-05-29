@@ -4,13 +4,24 @@ import Joi from 'joi';
 
 const {ObjectId} = mongoose.Types;
 
-export const checkObjectId = (ctx, next) => {
+export const getPostById = async (ctx, next) => {
     const {id} = ctx.params;
     if(!ObjectId.isValid(id)){
         ctx.status = 400; //Bad Request
         return;
     }
-    return next();
+    try{
+        const post = await Post.findById(id);
+        //포스트가 존재하지 않을 때
+        if(!post){
+            ctx.status = 404;//Not Found
+            return;
+        }
+        ctx.state.post = post;
+        return next();
+    }catch(e){
+        ctx.throw(500, e);
+    }
 };
 
 //posts 배열 초기 데이터
@@ -55,7 +66,7 @@ export const write = async ctx => {
         title,
         body,
         tags,
-        user: ctx.state.user,//일기를 쓸 때 사용자 정보를 넣어 DB에 저장
+        user: ctx.state.user, //일기를 쓸 때 사용자 정보를 넣어 DB에 저장
     });
     try{
         await post.save();//이때 데이터베이스에 저장됨
@@ -66,7 +77,7 @@ export const write = async ctx => {
 };
 
 /* 데이터 조회
-GET /api/posts
+GET /api/posts?username=&tag=&page=
 모델 인스턴스의 find()함수를 사용한다
 */
 export const list = async ctx => {
@@ -79,15 +90,21 @@ export const list = async ctx => {
         ctx.status = 400;
         return;
     }
+    const {tag, username} = ctx.query;
+    //tag, username값이 유효하면 객체 안에 넣고 그렇지 않으면 넣지 않음
+    const query = {//특정 사용자가 작성한 포스트만 조회하거나 특정 태그가 있는 포스트만 조회
+        ...(username ? { 'user.username': username} : {}),
+        ...(tag ? {tags: tag} : {}),
+    };//username 이나 tag값이 유효할 때만 객체안에 해당 값을 넣는다
 
     try{
-        const posts = await Post.find()
+        const posts = await Post.find(query)
         .sort({_id: -1})//포스트를 역순으로 불러오기 - 1: 오름차순, -1: 내림차순
         .limit(10)//포스트가 한 번에 보이는 개수는 10개로 한다
         .skip((page - 1) * 10)
         .lean()//데이터를 처음부터 json형태로 조회할 수 있다
         .exec();//find함수를 호출하고 exec()를 붙여야 서버에 쿼리를 요청한다
-    const postCount = await Post.countDocuments().exec();//마지막 페이지 번호 알려주기
+    const postCount = await Post.countDocuments(query).exec();//마지막 페이지 번호 알려주기
     ctx.set('Last-Page', Math.ceil(postCount / 10));
     ctx.body = posts.map(post => ({
         ...post,
@@ -106,17 +123,7 @@ read 함수를 통해 특정 포스트를 id로 찾아서 조회하는 기능 �
 findById()를 사용하여 특정 id를 가진 데이터를 찾는다
 */
 export const read = async ctx => {
-    const {id} = ctx.params;
-    try{
-        const post = await Post.findById(id).exec();
-        if(!post){
-            ctx.status = 404; //Not Found
-            return;
-        }
-        ctx.body = post;
-    }catch(e){
-        ctx.throw(500, e);
-    }
+    ctx.body = ctx.state.post;
 };
 
 /*특정 포스트 제거
@@ -176,4 +183,13 @@ export const update = async ctx => {
     }catch(e){
         ctx.throw(500, e);
     }
+};
+//id로 찾은 포스트가 로그인 중인 사용자가 작성한 포스트인지 확인한다.
+export const checkOwnPost = (ctx, next) => {
+    const {user, post} = ctx.state;
+    if(post.user._id.toString() !== user._id){
+        ctx.status = 403;
+        return;
+    }
+    return next();
 };

@@ -1,17 +1,17 @@
 import Joi from 'joi'; //객체를 수월하게 검증하기 위한 라이브러리
 import User from '../../models/user';
+//import jwt from 'jsonwebtoken';
 
 /*
-POST /api/user/register
+POST /api/auth/register
 {
     username: 'velopert',
     password: 'mypass123'
 }
 */
-
 export const register = async ctx => {
+  // Request Body 검증하기
   //회원가입
-  //Request Body 검증하기
   const schema = Joi.object().keys({
     username: Joi.string()
       .alphanum()
@@ -20,29 +20,28 @@ export const register = async ctx => {
       .required(),
     password: Joi.string().required(),
   });
-  const result = schema.validate(ctx.request.body);
+  const result = Joi.validate(ctx.request.body, schema);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
     return;
   }
-  const {
-    username,
-    password
-  } = ctx.request.body;
+
+  const { username, password } = ctx.request.body;
   try {
     //username이 이미 존재하는지 확인
     //회원가입을 할때 중복되는 계정이 생성되지 않도록 findByUsername으로 처리
     const exists = await User.findByUsername(username); //static메서드
     if (exists) {
-      ctx.status = 409; //Conflict
+      ctx.status = 409; // Conflict
       return;
     }
+
     const user = new User({
       username,
     });
-    await user.setPassword(password); //비밀번호 설정할 때 setPassword 인스턴스 함수 사용
-    await user.save(); //데이터베이스에 저장
+    await user.setPassword(password); // 비밀번호 설정
+    await user.save(); // 데이터베이스에 저장
 
     //응답할 데이터에서 hashedPassword필드 제거
     //hashedPassword가 응답되지 않도록 데이터를 JSON으로 변환, delete로 해당
@@ -54,7 +53,7 @@ export const register = async ctx => {
 
     const token = user.generateToken();
     ctx.cookies.set('access_token', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 7, //7일
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
       httpOnly: true,
     });
   } catch (e) {
@@ -63,11 +62,13 @@ export const register = async ctx => {
 };
 
 /*
-POST api/user/login
+POST api/auth/login
 {
     username: 'velopert',
     password: 'mypass123'
 }
+    username: 'velopert1',
+    password: 'mypass1234'
 */
 export const login = async ctx => {
   //로그인
@@ -108,13 +109,11 @@ export const login = async ctx => {
 };
 
 /*
-    GET /api/user/check
+    GET /api/auth/check
 */
 export const check = async ctx => {
   //로그인 상태 확인
-  const {
-    user
-  } = ctx.state;
+  const {user} = ctx.state;
   if (!user) {
     //로그인 중 아님
     ctx.status = 401; //Unauthorized
@@ -124,7 +123,7 @@ export const check = async ctx => {
 };
 
 /*
- POST /api/user/logout
+ POST /api/auth/logout
  */
 export const logout = async ctx => {
   //로그아웃

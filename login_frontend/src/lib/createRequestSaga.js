@@ -17,12 +17,13 @@ export default function createRequestSaga(type, request) {
             yield put({
                 type: SUCCESS,
                 payload: response.data,
+                meta: response,
             });
         }catch(e){
             yield put({
                 type: FAILURE,
                 payload: e,
-                error: true,
+                error: true, //HTTP 헤더 및 상태 코드를 쉽게 조회할 수 있다
             });
         }
         yield put(finishLoading(type)); //로딩 끝

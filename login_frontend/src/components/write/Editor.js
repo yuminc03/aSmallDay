@@ -11,6 +11,7 @@ const EditorBlock = styled(Responsive)`
   padding-bottom: 5rem;
 `;
 const TitleInput = styled.input`
+  font-weight: bold;
   font-size: 3rem;
   outline: none;
   padding-bottom: 0.5rem;
@@ -32,7 +33,7 @@ const QuillWrapper = styled.div`
   }
 `;
 
-const Editor = () => {
+const Editor = ({title, body, onChangeField}) => {
   const quillElement = useRef(null); // Quill을 적용할 DivElement를 설정
   const quillInstance = useRef(null); // Quill 인스턴스를 설정
 
@@ -51,28 +52,27 @@ const Editor = () => {
         ],
       },
     });
-}, []);
 
-//     // quill에 text-change 이벤트 핸들러 등록
-//     // 참고: https://quilljs.com/docs/api/#events
-//     const quill = quillInstance.current;
-//     quill.on('text-change', (delta, oldDelta, source) => {
-//       if (source === 'user') {
-//         onChangeField({ key: 'body', value: quill.root.innerHTML });
-//       }
-//     });
-//   }, [onChangeField]);
+    // quill에 text-change 이벤트 핸들러 등록
+    // 참고: https://quilljs.com/docs/api/#events
+    const quill = quillInstance.current;
+    quill.on('text-change', (delta, oldDelta, source) => {
+      if (source === 'user') {
+        onChangeField({ key: 'body', value: quill.root.innerHTML });
+      }
+    });
+  }, [onChangeField]);
 
-//   const onChangeTitle = e => {
-//     onChangeField({ key: 'title', value: e.target.value });
-//   };
+  const onChangeTitle = e => {
+    onChangeField({ key: 'title', value: e.target.value });
+  };
 
   return (
     <EditorBlock>
       <TitleInput
         placeholder="일기의 제목을 입력하세요"
-        // onChange={onChangeTitle}
-        // value={title}
+        onChange={onChangeTitle}
+        value={title}
       />
       <QuillWrapper>
         <div ref={quillElement} />

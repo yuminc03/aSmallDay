@@ -4,6 +4,7 @@ import palette from '../../lib/styles/palette';
 import Responsive from '../common/Responsive';
 import SubInfo from '../common/SubInfo';
 import Tags from '../common/Tags';
+import {Helmet} from 'react-helmet-async';
 
 const PostViewerBlock = styled(Responsive)`
   margin-top: 4rem;
@@ -24,7 +25,11 @@ const PostContent = styled.div`
   color: ${palette.gray[8]};
 `;
 
-const PostViewer = ({post, error, loading}) => {
+const PostViewer = ({post, error, loading, actionButtons}) => {
+  //actionButtons: postViewer의 PostHead 하단에서 보여줄 때 PostViewer에서 렌더링하면
+  //무조건 PostViewer을 거쳐야해서 불편함
+  //따라서 JSX형태로 받아 렌더링 하는 방법이 편하다 // 수정/삭제 버튼
+
   // 에러 발생 시
   if (error) {
     if (error.response && error.response.status === 404) {
@@ -41,24 +46,19 @@ const PostViewer = ({post, error, loading}) => {
   const { title, body, user, publishedDate, tags } = post;
   return (
     <PostViewerBlock>
-      {/* <Helmet>
-        <title>{title} - REACTERS</title>
-      </Helmet> */}
-
+      <Helmet>
+        <title>{title} - A SMALL DAY</title>
+      </Helmet>
       <PostHead>
         <h1>{title}</h1>
         <SubInfo 
           username={user.username} 
           publishedDate={publishedDate}
           hasMarginTop
-        >
-            <span>
-                <b>{user.username}</b>
-            </span>
-            <span>{new Date(publishedDate).toLocaleDateString()}</span>
-        </SubInfo>
+        />
         <Tags tags={tags}/>
       </PostHead>
+      {actionButtons}
       <PostContent dangerouslySetInnerHTML={{ __html: body}} />
       {/* dangerouslySetInnerHTML으로 HTML을 적용해줄수 있다 */}
     </PostViewerBlock>

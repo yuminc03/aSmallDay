@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PostList from '../../components/posts/PostList';
 import { listPosts } from '../../modules/posts';
 
-const PostListContainer = ({ location, match }) => {
+const PostListContainer = ({ location }) => {
   const dispatch = useDispatch();
   const { posts, error, loading, user } = useSelector(
     ({ posts, loading, user }) => ({
@@ -17,8 +17,7 @@ const PostListContainer = ({ location, match }) => {
     }),
   );
   useEffect(() => {
-    const { username } = match.params;
-    const { tag, page } = qs.parse(location.search, {
+    const { tag, username, page } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
     dispatch(listPosts({ tag, username, page }));
@@ -29,7 +28,8 @@ const PostListContainer = ({ location, match }) => {
       loading={loading}
       error={error}
       posts={posts}
-      showWriteButton={user}//props를 현재 로그인 중인 사용자의 정보를 지니고 있는 user객체로 설정
+      showWriteButton={user}
+      //props를 현재 로그인 중인 사용자의 정보를 지니고 있는 user객체로 설정
       //user객체가 유효할 때(사용자가 로그인 중일 때만) 포스트를 작성하는 버튼이 나타남
     />
   );

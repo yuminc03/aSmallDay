@@ -1,3 +1,4 @@
+//자신의 id로 들어가서 자신이 쓴 일기를 크게 볼 수 있다.
 import { createAction, handleActions } from 'redux-actions';
 import createRequestSaga, {
   createRequestActionTypes,
@@ -9,8 +10,8 @@ const [
   READ_POST,
   READ_POST_SUCCESS,
   READ_POST_FAILURE,
-] = createRequestActionTypes('posts/READ_POST');
-const UNLOAD_POST = 'post/UNLOAD_POST'; //포스트 페이지에서 벗어날 때 데이터 비우기
+] = createRequestActionTypes('post/READ_POST');
+const UNLOAD_POST = 'post/UNLOAD_POST'; // UNLOAD_POST: 포스트 페이지에서 벗어날 때 데이터 비우기
 
 export const readPost = createAction(READ_POST, id => id);
 export const unloadPost = createAction(UNLOAD_POST);
@@ -21,16 +22,15 @@ export function* postSaga() {
 }
 
 const initialState = {
-  posts: null,
+  post: null,
   error: null,
 };
 
-const posts = handleActions(
+const post = handleActions(
   {
-    [READ_POST_SUCCESS]: (state, { payload: posts}) => ({
+    [READ_POST_SUCCESS]: (state, { payload: post }) => ({
       ...state,
-      posts,
-      //lastPage: parseInt(response.headers['last-page'], 10), // 문자열을 숫자로 변환
+      post,
     }),
     [READ_POST_FAILURE]: (state, { payload: error }) => ({
       ...state,
@@ -41,4 +41,4 @@ const posts = handleActions(
   initialState,
 );
 
-export default posts;
+export default post;

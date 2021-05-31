@@ -18,11 +18,11 @@ const StyledButton = styled(Button)`
   }
 `;
 //포스트 작성 및 취소를 할 수 있는 컴포넌트
-const WriteActionButtons = ({ onCancel, onPublish }) => {
+const WriteActionButtons = ({ onCancel, onPublish, isEdit }) => {
   return (
     <WriteActionButtonsBlock>
       <StyledButton cyan onClick={onPublish}>
-        일기 게시
+        일기 {isEdit ? '수정' : '등록'}
       </StyledButton>
       <StyledButton onClick={onCancel}>취소</StyledButton>
     </WriteActionButtonsBlock>

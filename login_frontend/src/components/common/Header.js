@@ -45,7 +45,7 @@ const UserInfo = styled.div`
     margin-right: 1rem;
 `;
 
-const Header = (user, onLogout) => {
+const Header = ({user, onLogout}) => {
     return(
         <>
         <HeaderBlock>

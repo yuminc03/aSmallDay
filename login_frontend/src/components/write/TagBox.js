@@ -25,11 +25,12 @@ const TagForm = styled.form`
   button {
     outline: none;
     border: none;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   input {
     padding: 0.5rem;
     flex: 1;
+    min-width: 0;
   }
   button {
     cursor: pointer;

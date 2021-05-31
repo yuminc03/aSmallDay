@@ -78,7 +78,7 @@ const PostList = ({posts, loading, error, showWriteButton}) => {
       {!loading && posts && (
         <div>
           {posts.map(post => (
-            <PostItem post = {post} key = {post._id} />
+            <PostItem post={post} key={post._id} />
           ))}
       </div>
       )}

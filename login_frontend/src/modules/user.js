@@ -63,7 +63,7 @@ export default handleActions(
         }),
         [LOGOUT]: state => ({
             ...state,
-            user:null,
+            user: null,
         }),
     },
     initialState,

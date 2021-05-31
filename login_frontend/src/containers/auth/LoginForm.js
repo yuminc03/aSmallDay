@@ -5,7 +5,7 @@ import {changeField, initializeForm, login} from '../../modules/auth';
 import AuthForm from '../../components/auth/AuthForm';
 import {check} from '../../modules/user';
 
-const LoginForm = (history) =>{
+const LoginForm = ({history}) =>{
     const [error, setError] = useState(null);
 
     const dispatch = useDispatch();

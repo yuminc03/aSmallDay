@@ -63,10 +63,17 @@ const Editor = ({title, body, onChangeField}) => {
     });
   }, [onChangeField]);
 
+  const mounted = useRef(false);
+  useEffect(() => {//수정 버튼 내용 초깃값
+    if(mounted.current) return;
+    mounted.current = true;
+    quillInstance.current.root.innerHTML = body;
+  }, [body]);
+
   const onChangeTitle = e => {
     onChangeField({ key: 'title', value: e.target.value });
   };
-
+  
   return (
     <EditorBlock>
       <TitleInput

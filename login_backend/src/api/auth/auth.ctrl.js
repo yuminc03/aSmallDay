@@ -7,6 +7,12 @@ POST /api/auth/register
 {
     username: 'velopert',
     password: 'mypass123'
+
+    "username": "velopert1",
+    "password": "mypass123"
+
+    "username": "velopert2",
+    "password": "mypass1234"
 }
 */
 export const register = async (ctx) => {
@@ -16,7 +22,7 @@ export const register = async (ctx) => {
     username: Joi.string().alphanum().min(3).max(20).required(),
     password: Joi.string().required(),
   });
-  const result = Joi.validate(ctx.request.body);
+  const result = schema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
@@ -42,7 +48,7 @@ export const register = async (ctx) => {
     //응답할 데이터에서 hashedPassword필드 제거
     //hashedPassword가 응답되지 않도록 데이터를 JSON으로 변환, delete로 해당
     //필드를 삭제
-    // const data = user.toUSON();
+    // const data = user.toJSON();
     // delete data.hashedPassword;
     // ctx.body = data;
     ctx.body = user.serialize();

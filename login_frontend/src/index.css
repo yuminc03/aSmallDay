@@ -33,3 +33,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+@font-face {
+  font-family: 'NanumPenScript-Regular';
+  font-style: normal;
+  font-weight: 100;
+  src: url("styles/fonts/NanumPenScript-Regular.ttf") format('ttf'),
+}
